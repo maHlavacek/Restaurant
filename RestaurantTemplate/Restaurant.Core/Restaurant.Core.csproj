@@ -55,8 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Guest.cs" />
     <Compile Include="MyFile.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="OrderType.cs" />
+    <Compile Include="Task.cs" />
     <Compile Include="Waiter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

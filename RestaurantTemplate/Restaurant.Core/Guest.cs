@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Core
 {
-    public class Waiter
+    class Guest
     {
-        public List<Order> Orders { get; set; }
-    }
+        public string Name { get; set; }
 
+        public OrderType Type { get; set; }
+    }
 }
