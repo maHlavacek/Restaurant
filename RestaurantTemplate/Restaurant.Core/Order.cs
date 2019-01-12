@@ -8,10 +8,11 @@ namespace Restaurant.Core
 {
     public class Order
     {
-        public string Article { get; set; }
+        public List<Article> Article { get; set; }
 
-        public DateTime Delay { get; set; }
+        public int Delay { get; set; }
 
         public string GuestName { get; set; }
+        public OrderType OrderType { get; set; }
     }
 }

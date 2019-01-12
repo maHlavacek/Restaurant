@@ -11,5 +11,7 @@ namespace Restaurant.Core
         public string Name { get; set; }
 
         public OrderType Type { get; set; }
+
+        public List<Article> OrderedArticles { get; set; }
     }
 }
