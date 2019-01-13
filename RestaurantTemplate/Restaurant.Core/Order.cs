@@ -8,12 +8,14 @@ namespace Restaurant.Core
 {
     public class Order
     {
-
-        public Order(int delay, string guestName, OrderType orderType, Article article)
+        public Order(int delay, string guestName, OrderType orderType)
         {
             Delay = delay;
             GuestName = guestName;
             OrderType = orderType;
+        }
+        public Order(int delay, string guestName, OrderType orderType, Article article) :this (delay,guestName, orderType)
+        {
             Article = article;
         }
 

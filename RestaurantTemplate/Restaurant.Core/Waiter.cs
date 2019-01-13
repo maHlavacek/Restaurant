@@ -47,15 +47,23 @@ namespace Restaurant.Core
             {
                 string[] rows = lines[i].Split(';');
 
+                int delay = int.Parse(rows[0]);
+                string guestName = rows[1];
+
                 if (rows[2] == "Order")
                 {
-                    int delay = int.Parse(rows[0]);
-                    string guestName = rows[1];
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, GetArticle(articleName));
                     orders.Add(order);
-                }           
+                }
+                else
+                {
+                    Order order = new Order(delay, guestName, OrderType.ToPay);
+                    orders.Add(order);
+                }
+
+
             }
             return orders;
         }      
