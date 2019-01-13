@@ -18,6 +18,9 @@ namespace Restaurant.Core
 
         #endregion
 
+        #region Event
+        public event EventHandler<Order> OrderRecived;
+        #endregion
         #region Constructor
 
         public Waiter()
@@ -30,13 +33,13 @@ namespace Restaurant.Core
 
         #region Methods
 
+
         /// <summary>
         /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
         /// </summary>
         /// <param name="filename"></param>
         public void ReadAllOrders(string filename)
         {
-            List<Order> listOfOrder = new List<Order>();
             string[] lines = MyFile.ReadLinesFromCsvFile(filename);
             for (int i = 1; i < lines.Length; i++)
             {
@@ -49,6 +52,7 @@ namespace Restaurant.Core
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, articleName);
+                    ListOfOrders.Add(order);
                     AddOrdersToGuests(order);
                 }           
             }         
@@ -134,7 +138,15 @@ namespace Restaurant.Core
 
         public void OnOneMinuteIsOver(object sender, DateTime time)
         {
-            
+            foreach (Order order in ListOfOrders)
+            {
+                if(order.Delay == time.Minute)
+                {
+                    OrderRecived?.Invoke(this,order);
+                   
+                }
+            }
+
         }
         #endregion
     }

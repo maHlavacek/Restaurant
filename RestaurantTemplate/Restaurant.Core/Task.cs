@@ -8,6 +8,11 @@ namespace Restaurant.Core
 {
     class Task
     {
+        #region Methods
+        public void OnOrderRecived(object sender, string massage)
+        {
 
+        }
+        #endregion
     }
 }
