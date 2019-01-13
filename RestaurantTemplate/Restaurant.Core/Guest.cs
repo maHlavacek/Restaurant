@@ -8,7 +8,7 @@ namespace Restaurant.Core
 {
     public class Guest
     { 
-        public Guest(string guestName, string orederedArticle)
+        public Guest(string guestName)
         {
             Name = guestName;
         }

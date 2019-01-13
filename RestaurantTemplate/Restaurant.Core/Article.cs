@@ -8,8 +8,6 @@ namespace Restaurant.Core
 {
     public class Article
     {
-        private int timeToBuilt;
-
         public Article(string item,double price,int timeToBuild)
         {
             Item = item;
