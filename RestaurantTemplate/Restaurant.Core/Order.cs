@@ -9,12 +9,12 @@ namespace Restaurant.Core
     public class Order
     {
 
-        public Order(int delay, string guestName, OrderType orderType, string articleName)
+        public Order(int delay, string guestName, OrderType orderType, Article article)
         {
             Delay = delay;
             GuestName = guestName;
             OrderType = orderType;
-            ArticleName = articleName;
+            Article = article;
         }
 
         public int Delay { get; set; }
@@ -24,6 +24,6 @@ namespace Restaurant.Core
         public OrderType OrderType { get; set; }
        
 
-        public string ArticleName { get; set; }
+        public Article Article{ get; set; }
     }
 }

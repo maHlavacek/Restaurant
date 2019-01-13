@@ -53,7 +53,7 @@ namespace Restaurant.Core
                     string guestName = rows[1];
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
-                    Order order = new Order(delay, guestName, orderType, articleName);
+                    Order order = new Order(delay, guestName, orderType, GetArticle(articleName));
                     orders.Add(order);
                 }           
             }
@@ -130,7 +130,7 @@ namespace Restaurant.Core
             {
                 if(order.Delay == time.Minute)
                 {
-                    Task task = new Task(GetArticle(order.ArticleName),time,GetGuest(order.GuestName));
+                    Task task = new Task(order,time,GetGuest(order.GuestName));
                     OrderRecived?.Invoke(this,time);                 
                 }
             }

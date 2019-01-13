@@ -9,19 +9,18 @@ namespace Restaurant.Core
     public class Task
     {
         #region Fields
-        private Article _article;
+        private Order _order;
         private DateTime _startToBuild;
-        private Guest _guest;
+      //  private readonly Guest _guest;
         public event EventHandler<string> LogTask;
         #endregion
 
         #region Constructor
-        public Task(Article article,DateTime time,Guest guest,EventHandler<string> logTask)
+        public Task(Order order,DateTime time,Guest guest)
         {
-            _article = article;
+            _order = order;
             _startToBuild = time;
-            _guest = guest;
-            LogTask += logTask;
+            //_guest = guest;
         }
         #endregion
 
@@ -30,9 +29,9 @@ namespace Restaurant.Core
         #region Methods
         public void OnOrderRecived(object sender,DateTime time)
         {
-            if(_startToBuild.AddMinutes(_article.TimeToBuild) == time)
+            if(_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
             {
-                LogTask?.Invoke(this,$"{_article.Item} für {_guest.Name} wird serviert");
+                LogTask?.Invoke(this,$"{_order.Article.Item} für {_order.GuestName} wird serviert");
             }
         }
     
