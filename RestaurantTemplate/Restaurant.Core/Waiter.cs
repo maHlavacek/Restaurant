@@ -19,7 +19,7 @@ namespace Restaurant.Core
         #endregion
 
         #region Event
-        public event EventHandler<DateTime> OrderRecived;
+        public event EventHandler<string> OrderRecived;
         #endregion
         #region Constructor
 
@@ -130,8 +130,8 @@ namespace Restaurant.Core
             {
                 if(order.Delay == time.Minute)
                 {
-                    Task task = new Task(order,time,GetGuest(order.GuestName));
-                    OrderRecived?.Invoke(this,time);                 
+                    Task task = new Task(order,time/*,GetGuest(order.GuestName)*/);
+                    OrderRecived?.Invoke(this,$"{order.Article} für {order.GuestName} ist bestellt");                 
                 }
             }
 

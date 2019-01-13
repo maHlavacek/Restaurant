@@ -16,7 +16,7 @@ namespace Restaurant.Core
         #endregion
 
         #region Constructor
-        public Task(Order order,DateTime time,Guest guest)
+        public Task(Order order,DateTime time/*,Guest guest*/)
         {
             _order = order;
             _startToBuild = time;
@@ -27,9 +27,12 @@ namespace Restaurant.Core
 
 
         #region Methods
+
+
+
         public void OnOrderRecived(object sender,DateTime time)
         {
-            if(_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
+            if (_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
             {
                 LogTask?.Invoke(this,$"{_order.Article.Item} für {_order.GuestName} wird serviert");
             }
