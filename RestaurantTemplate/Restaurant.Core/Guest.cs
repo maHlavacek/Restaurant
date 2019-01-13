@@ -14,7 +14,7 @@ namespace Restaurant.Core
             Name = guestName;
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         public List<Article> OrderedArticles { get; set; }
 

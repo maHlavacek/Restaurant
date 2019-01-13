@@ -18,6 +18,15 @@ namespace Restaurant.Core
 
         #endregion
 
+        #region Constructor
+
+        public Waiter()
+        {
+            ReadAllOrders("Orders.csv");
+            ReadArticlesFromCsv("Articles.csv");
+            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
+        }
+        #endregion
 
         #region Methods
 
@@ -121,6 +130,11 @@ namespace Restaurant.Core
                 }
             }
             return null;
+        }
+
+        public void OnOneMinuteIsOver(object sender, DateTime time)
+        {
+            
         }
         #endregion
     }
