@@ -8,6 +8,7 @@ namespace Restaurant.Core
 {
     public class Guest
     { 
+        private double _payment;
         public Guest(string guestName)
         {
             Name = guestName;
@@ -17,6 +18,17 @@ namespace Restaurant.Core
 
         public List<Article> OrderedArticles { get; set; }
 
-        public double Payment { get; set; }
+        public double Payment
+        {
+            get
+            {             
+                foreach (Article article in OrderedArticles)
+                {
+                    _payment += article.Price;
+                }
+                return _payment;
+            }
+
+        }
     }
 }

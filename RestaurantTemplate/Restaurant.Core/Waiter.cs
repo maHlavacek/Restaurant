@@ -12,7 +12,7 @@ namespace Restaurant.Core
     {
         #region Properties
         public List<Guest> Guests { get; set; }
-       // public List<Order> ListOfOrders { get; set; }
+        public List<Order> ListOfOrders { get; set; }
         public List<Article> ListOfArticles { get; set; }
 
 
@@ -20,10 +20,6 @@ namespace Restaurant.Core
 
 
         #region Methods
-
-
-
-
 
         /// <summary>
         /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
@@ -37,10 +33,10 @@ namespace Restaurant.Core
             {
                 string[] rows = lines[i].Split(';');
 
-                int delay = int.Parse(rows[0]);
-                string guestName = rows[1];
                 if (rows[2] == "Order")
                 {
+                    int delay = int.Parse(rows[0]);
+                    string guestName = rows[1];
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, articleName);
@@ -60,12 +56,9 @@ namespace Restaurant.Core
                 Guest newGuest = new Guest(order.GuestName);
                 Guests.Add(newGuest);
             }
-            else
-            {
-                Guest guest = GetGuest(order.GuestName);
-                Article newArticle = GetArticle(order.ArticleName);
-                guest.OrderedArticles.Add(newArticle);
-            }
+            Guest guest = GetGuest(order.GuestName);
+            Article newArticle = GetArticle(order.ArticleName);
+            guest.OrderedArticles.Add(newArticle);          
         }             
 
         /// <summary>
