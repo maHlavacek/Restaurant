@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 namespace Restaurant.Core
 {
     public class Guest
-    {
-        public string Name { get; set; }
+    { 
+        public Guest(string guestName, string orederedArticle)
+        {
+            Name = guestName;
+        }
 
-        public OrderType Type { get; set; }
+        public string Name { get; set; }
 
         public List<Article> OrderedArticles { get; set; }
 
