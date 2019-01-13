@@ -13,21 +13,22 @@ namespace Restaurant.Core
         #region Properties
         public List<Guest> Guests { get; set; }
         public List<Order> ListOfOrders { get; set; }
-        public List<Article> ListOfArticles { get; set; }
+        public List<Article> ListOfArticles { get; private set; }
 
 
         #endregion
 
         #region Event
-        public event EventHandler<Order> OrderRecived;
+        public event EventHandler<DateTime> OrderRecived;
         #endregion
         #region Constructor
 
         public Waiter()
         {
-            ReadAllOrders("Orders.csv");
-            ReadArticlesFromCsv("Articles.csv");
+            ListOfOrders = ReadAllOrders("Orders.csv");
+            ListOfArticles = ReadArticlesFromCsv("Articles.csv");
             FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
+            
         }
         #endregion
 
@@ -38,8 +39,9 @@ namespace Restaurant.Core
         /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
         /// </summary>
         /// <param name="filename"></param>
-        public void ReadAllOrders(string filename)
+        public List<Order> ReadAllOrders(string filename)
         {
+            List<Order> orders = new List<Order>();
             string[] lines = MyFile.ReadLinesFromCsvFile(filename);
             for (int i = 1; i < lines.Length; i++)
             {
@@ -52,34 +54,19 @@ namespace Restaurant.Core
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, articleName);
-                    ListOfOrders.Add(order);
-                    AddOrdersToGuests(order);
+                    orders.Add(order);
                 }           
-            }         
-        }
-        /// <summary>
-        /// Neuer Gast wird angelegt und dessen Bestellung wird gespeichert
-        /// Wenn der Gast schon existiert wird die Bestellung ihm zugewiesen
-        /// </summary>
-        /// <param name="order"></param>
-        public void AddOrdersToGuests(Order order)
-        {  
-            if (GetGuest(order.GuestName) == null)
-            {
-                Guest newGuest = new Guest(order.GuestName);
-                Guests.Add(newGuest);
             }
-            Guest guest = GetGuest(order.GuestName);
-            Article newArticle = GetArticle(order.ArticleName);
-            guest.OrderedArticles.Add(newArticle);          
-        }             
+            return orders;
+        }      
 
         /// <summary>
         /// Lest die Artikel von der CSV datai ein und speichert sie
         /// </summary>
         /// <param name="filename"></param>
-        public void ReadArticlesFromCsv(string filename)
+        public List<Article> ReadArticlesFromCsv(string filename)
         {
+            List<Article> articles = new List<Article>();
             string[] lines = File.ReadAllLines(filename, Encoding.Default);
 
             for (int i = 1; i < lines.Length; i++)
@@ -90,9 +77,10 @@ namespace Restaurant.Core
                 double price = double.Parse(rows[1]);
                 int timeToBuilt = int.Parse(rows[2]);
 
-                Article articles = new Article(item, price, timeToBuilt);
-                ListOfArticles.Add(articles);
+                Article article = new Article(item, price, timeToBuilt);
+                articles.Add(article);
             }
+            return articles;
         }
         /// <summary>
         /// Gast wird gesucht und zurückgegeben
@@ -142,8 +130,8 @@ namespace Restaurant.Core
             {
                 if(order.Delay == time.Minute)
                 {
-                    OrderRecived?.Invoke(this,order);
-                   
+                    Task task = new Task(GetArticle(order.ArticleName),time,GetGuest(order.GuestName));
+                    OrderRecived?.Invoke(this,time);                 
                 }
             }
 
