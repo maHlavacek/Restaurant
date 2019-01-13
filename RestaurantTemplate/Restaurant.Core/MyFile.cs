@@ -86,6 +86,17 @@ namespace Utils
             }
             return elements;
         }
+
+        public static string[] ReadLinesFromCsvFile(string filename)
+        {
+            string path = MyFile.GetFullNameInApplicationTree(filename);
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+            string[] lines = File.ReadAllLines(path, Encoding.UTF8);
+            return lines;
+        }
     }
 
 }

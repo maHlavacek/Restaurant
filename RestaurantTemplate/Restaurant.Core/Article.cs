@@ -10,15 +10,11 @@ namespace Restaurant.Core
     {
         private int timeToBuilt;
 
-        public Article(string orederedArticle)
-        {
-        }
-
-        public Article(string item, double price, int timeToBuilt)
+        public Article(string item,double price,int timeToBuild)
         {
             Item = item;
             Price = price;
-            this.timeToBuilt = timeToBuilt;
+            TimeToBuild = timeToBuild;
         }
 
         public string Item { get; set; }
