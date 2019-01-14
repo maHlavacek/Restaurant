@@ -12,7 +12,7 @@ namespace Restaurant.Core
         private Order _order;
         private DateTime _startToBuild;
       //  private readonly Guest _guest;
-        public event EventHandler<string> LogTask;
+        public static event EventHandler<string> LogTask;
         #endregion
 
         #region Constructor
