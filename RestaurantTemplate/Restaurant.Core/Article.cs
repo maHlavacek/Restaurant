@@ -8,7 +8,7 @@ namespace Restaurant.Core
 {
     public class Article
     {
-        public Article(string item,double price,int timeToBuild)
+        public Article(string item,double price,double timeToBuild)
         {
             Item = item;
             Price = price;
@@ -17,6 +17,6 @@ namespace Restaurant.Core
 
         public string Item { get; set; }
         public double Price { get; set; }
-        public int TimeToBuild { get; set; }
+        public double TimeToBuild { get; set; }
     }
 }
