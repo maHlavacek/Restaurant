@@ -21,7 +21,7 @@ namespace Restaurant.Core
         private FastClock()
         {
             Time = DateTime.Now;
-            Factor = 360;
+            Factor = 60;
             _timer = new DispatcherTimer();
             _timer.Tick += Timer_Tick;
         }

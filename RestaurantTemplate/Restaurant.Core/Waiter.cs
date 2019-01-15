@@ -11,10 +11,9 @@ namespace Restaurant.Core
     public class Waiter
     {
         #region Properties
-        private List<Guest> Guests { get; set; }
-        private List<Order> _listOfOrders;
-        private List<Article> _listOfArticles;
-        private DateTime _startTime;
+        public List<Guest> Guests { get; set; }
+        public List<Order> _listOfOrders;
+        public List<Article> _listOfArticles;
 
         private static Waiter _instance;
 
@@ -40,10 +39,9 @@ namespace Restaurant.Core
         {
             _listOfOrders = new List<Order>();
             _listOfArticles = new List<Article>();
-            ReadArticlesFromCsv("Articles.csv");
             ReadAllOrders("Orders.csv");
-            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
-            _startTime = FastClock.Instance.Time;
+            ReadArticlesFromCsv("Articles.csv");
+            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;           
         }
         #endregion
 
@@ -56,7 +54,7 @@ namespace Restaurant.Core
             {
                 return null;
             }
-            string[] lines = File.ReadAllLines(path, Encoding.Default);
+            string[] lines = File.ReadAllLines(path, Encoding.UTF8);
             return lines;
         }
 
@@ -71,7 +69,7 @@ namespace Restaurant.Core
             {
                 string[] rows = lines[i].Split(';');
 
-                double delay = double.Parse(rows[0]);
+                int delay = int.Parse(rows[0]);
                 string guestName = rows[1];
 
                 if (rows[2] == "Order")
@@ -103,7 +101,7 @@ namespace Restaurant.Core
 
                 string item = rows[0];
                 double price = double.Parse(rows[1]);
-                double timeToBuilt = double.Parse(rows[2]);
+                int timeToBuilt = int.Parse(rows[2]);
 
                 Article article = new Article(item, price, timeToBuilt);
                 _listOfArticles.Add(article);
@@ -155,19 +153,15 @@ namespace Restaurant.Core
         {
             foreach (Order order in _listOfOrders)
             {
-                if (_startTime.AddMinutes(order.Delay) == time)
+                if (order.Delay == time.Minute)
                 {
-                    Task task = new Task(order, time, GetGuest(order.GuestName));
-                    if (order.OrderType == OrderType.ToPay)
+                    Task task = new Task(order, time/*,GetGuest(order.GuestName)*/);
+                    while (true)
                     {
-                        OnOrderRecieved(this, $"{order.GuestName} bezahlt {GetGuest(order.GuestName).Payment}");
-                    }
-                    else
-                    {
-                        OnOrderRecieved(this, $"{order.Article.Item} für {order.GuestName} ist bestellt");
-                    }
-                }
 
+                    }
+                    OnOrderRecieved(this,$"{order.Article.Item} für {order.GuestName} ist bestellt");                 
+                }
             }
         }
 

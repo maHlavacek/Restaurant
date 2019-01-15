@@ -11,17 +11,16 @@ namespace Restaurant.Core
         #region Fields
         private Order _order;
         private DateTime _startToBuild;
-        private readonly Guest _guest;
+      //  private readonly Guest _guest;
         public static event EventHandler<string> LogTask;
         #endregion
 
         #region Constructor
-        public Task(Order order,DateTime time,Guest guest)
+        public Task(Order order,DateTime time/*,Guest guest*/)
         {
             _order = order;
             _startToBuild = time;
-            _guest = guest;
-            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
+            //_guest = guest;
         }
         #endregion
 
@@ -29,7 +28,9 @@ namespace Restaurant.Core
 
         #region Methods
 
-        public void OnOneMinuteIsOver(object sender,DateTime time)
+
+
+        public void OnOrderRecived(object sender,DateTime time)
         {
             if (_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
             {
