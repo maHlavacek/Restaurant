@@ -11,9 +11,11 @@ namespace Restaurant.Core
     public class Waiter
     {
         #region Properties
-        public List<Guest> Guests { get; set; }
-        public List<Order> _listOfOrders;
-        public List<Article> _listOfArticles;
+
+        private List<Order> _listOfOrders;
+        private List<Guest> _listOfGuests;
+        private List<Article> _listOfArticles;
+        private DateTime _startTime;
 
         private static Waiter _instance;
 
@@ -39,9 +41,18 @@ namespace Restaurant.Core
         {
             _listOfOrders = new List<Order>();
             _listOfArticles = new List<Article>();
-            ReadAllOrders("Orders.csv");
+            _listOfGuests = new List<Guest>();
             ReadArticlesFromCsv("Articles.csv");
-            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;           
+            ReadAllOrders("Orders.csv");
+            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
+            Task.LogTask += OnLogTask;
+            _startTime = FastClock.Instance.Time;
+        }
+
+        private void OnLogTask(object sender, Order order)
+        {
+            OnOrderRecieved(this, $"{order.Article.Item} für {order.GuestName} wird serviert");
+            _listOfOrders.Remove(order);
         }
         #endregion
 
@@ -54,22 +65,39 @@ namespace Restaurant.Core
             {
                 return null;
             }
-            string[] lines = File.ReadAllLines(path, Encoding.UTF8);
+            string[] lines = File.ReadAllLines(path, Encoding.Default);
             return lines;
         }
 
-        /// <summary>
-        /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
-        /// </summary>
-        /// <param name="filename"></param>
-        public void ReadAllOrders(string filename)
+        public void AddOrdersToGuests(Order order)
+        {
+            { 
+                if (GetGuest(order.GuestName) == null)
+                {
+                    Guest newGuest = new Guest(order);
+                    _listOfGuests.Add(newGuest);
+                }
+                else
+                {
+                    Guest guest = GetGuest(order.GuestName);
+                    Article newArticle = order.Article;
+                    guest._orderedArticles.Add(newArticle);
+                }
+
+            }
+        }
+            /// <summary>
+            /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
+            /// </summary>
+            /// <param name="filename"></param>
+            public void ReadAllOrders(string filename)
         {
             string[] lines = ReadLinesFromCsvFile(filename);
             for (int i = 1; i < lines.Length; i++)
             {
                 string[] rows = lines[i].Split(';');
 
-                int delay = int.Parse(rows[0]);
+                double delay = double.Parse(rows[0]);
                 string guestName = rows[1];
 
                 if (rows[2] == "Order")
@@ -77,13 +105,19 @@ namespace Restaurant.Core
                     OrderType orderType = OrderType.Order;
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, GetArticle(articleName));
+                    Guest guest = new Guest(order);
+                    Task task = new Task(order);
                     _listOfOrders.Add(order);
+                    AddOrdersToGuests(order);
                 }
                 else
                 {
                     Order order = new Order(delay, guestName, OrderType.ToPay);
+                    Guest guest = new Guest(order);
                     _listOfOrders.Add(order);
+                    AddOrdersToGuests(order);
                 }
+
             }
         }      
 
@@ -101,7 +135,7 @@ namespace Restaurant.Core
 
                 string item = rows[0];
                 double price = double.Parse(rows[1]);
-                int timeToBuilt = int.Parse(rows[2]);
+                double timeToBuilt = double.Parse(rows[2]);
 
                 Article article = new Article(item, price, timeToBuilt);
                 _listOfArticles.Add(article);
@@ -119,7 +153,7 @@ namespace Restaurant.Core
             {
                 return null;
             }
-            foreach (Guest guest in Guests)
+            foreach (Guest guest in _listOfGuests)
             {
                 if (guest.Name == name)
                 {
@@ -149,20 +183,32 @@ namespace Restaurant.Core
             return null;
         }
 
+        public void PrintOut(Order order)
+        {
+            if (order.OrderType == OrderType.ToPay)
+            {
+                OnOrderRecieved(this, $"{order.GuestName} bezahlt {GetGuest(order.GuestName).Payment}");
+            }
+            if (order.OrderType == OrderType.Order)
+            {
+                OnOrderRecieved(this, $"{order.Article.Item} für {order.GuestName} ist bestellt");
+            }
+            if (order.OrderType == OrderType.Ready)
+            {
+                OnOrderRecieved(this, $"{order.Article.Item} für {order.GuestName} wird serviert");
+            }
+        }
+
         public void OnOneMinuteIsOver(object sender, DateTime time)
         {
             foreach (Order order in _listOfOrders)
             {
-                if (order.Delay == time.Minute)
+                if(_startTime.AddMinutes(order.Delay) == time)
                 {
-                    Task task = new Task(order, time/*,GetGuest(order.GuestName)*/);
-                    while (true)
-                    {
-
-                    }
-                    OnOrderRecieved(this,$"{order.Article.Item} für {order.GuestName} ist bestellt");                 
+                    PrintOut(order);                
                 }
             }
+ 
         }
 
         private void OnOrderRecieved(object sender, string massage)

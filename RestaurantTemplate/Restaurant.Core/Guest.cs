@@ -9,20 +9,23 @@ namespace Restaurant.Core
     public class Guest
     { 
         private double _payment;
-        public Guest(string guestName)
+        public Guest(Order order)
         {
-            Name = guestName;
+            _orderedArticles = new List<Article>();
+            Name = order.GuestName;
+            _orderedArticles.Add(order.Article);
         }
 
         public string Name { get; private set; }
 
-        public List<Article> OrderedArticles { get; set; }
+
+        public List<Article> _orderedArticles;
 
         public double Payment
         {
             get
             {             
-                foreach (Article article in OrderedArticles)
+                foreach (Article article in _orderedArticles)
                 {
                     _payment += article.Price;
                 }

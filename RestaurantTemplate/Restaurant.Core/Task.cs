@@ -12,29 +12,29 @@ namespace Restaurant.Core
         private Order _order;
         private DateTime _startToBuild;
       //  private readonly Guest _guest;
-        public static event EventHandler<string> LogTask;
+        public static event EventHandler<Order> LogTask;
         #endregion
 
         #region Constructor
-        public Task(Order order,DateTime time/*,Guest guest*/)
+        public Task(Order order)
         {
+            _startToBuild = FastClock.Instance.Time;
+            FastClock.Instance.OneMinuteIsOver += Instance_OneMinuteIsOver;
             _order = order;
-            _startToBuild = time;
-            //_guest = guest;
         }
+
         #endregion
 
 
 
         #region Methods
 
-
-
-        public void OnOrderRecived(object sender,DateTime time)
+        public void Instance_OneMinuteIsOver(object sender,DateTime time)
         {
             if (_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
             {
-                LogTask?.Invoke(this,$"{_order.Article.Item} für {_order.GuestName} wird serviert");
+                _order.OrderType = OrderType.Ready;
+                LogTask?.Invoke(this, _order);
             }
         }
     

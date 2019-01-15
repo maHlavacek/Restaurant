@@ -20,8 +20,8 @@ namespace Restaurant.Core
         }
         private FastClock()
         {
-            Time = DateTime.Now;
-            Factor = 60;
+            Time = DateTime.Parse("12:00:00");
+            Factor = 360;
             _timer = new DispatcherTimer();
             _timer.Tick += Timer_Tick;
         }

@@ -19,6 +19,7 @@ namespace Restaurant.Wpf
             Waiter waiter = Waiter.Instance;
             waiter.OrderRecived += Waiter_OrderRecived;
             FastClock.Instance.IsRunning = true;
+            FastClock.Instance.Time = DateTime.Parse("12:00:00");
             TextBlockLog.Text = "";
         }
 
