@@ -11,7 +11,9 @@ namespace Restaurant.Core
         #region Fields
         private Order _order;
         private DateTime _startToBuild;
-      //  private readonly Guest _guest;
+        #endregion
+
+        #region Event
         public static event EventHandler<Order> LogTask;
         #endregion
 
@@ -22,13 +24,14 @@ namespace Restaurant.Core
             FastClock.Instance.OneMinuteIsOver += Instance_OneMinuteIsOver;
             _order = order;
         }
-
         #endregion
 
-
-
         #region Methods
-
+        /// <summary>
+        /// Benachrichtigung für Waiter dass der Artikel fertiggestellt wurde und serviert werden kann
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="time"></param>
         public void Instance_OneMinuteIsOver(object sender,DateTime time)
         {
             if (_startToBuild.AddMinutes(_order.Article.TimeToBuild) == time)
@@ -36,8 +39,7 @@ namespace Restaurant.Core
                 _order.OrderType = OrderType.Ready;
                 LogTask?.Invoke(this, _order);
             }
-        }
-    
+        }  
         #endregion
     }
 }

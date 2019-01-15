@@ -16,17 +16,21 @@ namespace Restaurant.Wpf
 
         private void MetroWindow_Initialized(object sender, EventArgs e)
         {
-            Waiter waiter = Waiter.Instance;
-            waiter.OrderRecived += Waiter_OrderRecived;
-            FastClock.Instance.IsRunning = true;
             FastClock.Instance.Time = DateTime.Parse("12:00:00");
+            FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
+            Waiter waiter = Waiter.Instance;
+            waiter.OrderRecived += OnOrderRecived;
+            FastClock.Instance.IsRunning = true;
             TextBlockLog.Text = "";
         }
 
-        private void Waiter_OrderRecived(object sender, string massage)
+        private void OnOneMinuteIsOver(object sender, DateTime time)
         {
+            Title = $"RESTAURANTSIMULATOR, UHRZEIT: " + time.ToShortTimeString();
+        }
 
-            Title = $"RESTAURANTSIMULATOR, UHRZEIT: " + FastClock.Instance.Time.ToShortTimeString();
+        private void OnOrderRecived(object sender, string massage)
+        {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(FastClock.Instance.Time.ToShortTimeString() + "\t");
             stringBuilder.Append(massage + "\n");

@@ -10,14 +10,19 @@ namespace Restaurant.Core
 {
     public class Waiter
     {
-        #region Properties
+
+        #region Fields
 
         private List<Order> _listOfOrders;
         private List<Guest> _listOfGuests;
         private List<Article> _listOfArticles;
         private DateTime _startTime;
-
         private static Waiter _instance;
+
+        #endregion
+
+
+        #region Properties
 
         public static Waiter Instance
         {
@@ -49,15 +54,16 @@ namespace Restaurant.Core
             _startTime = FastClock.Instance.Time;
         }
 
-        private void OnLogTask(object sender, Order order)
-        {
-            PrintOut(order);
-            _listOfOrders.Remove(order);
-        }
+
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// CsvFile wird eingelesen
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
         public string[] ReadLinesFromCsvFile(string filename)
         {
             string path = MyFile.GetFullNameInApplicationTree(filename);
@@ -69,6 +75,10 @@ namespace Restaurant.Core
             return lines;
         }
 
+        /// <summary>
+        /// Jedem Gast werden die Bestellten Artikel zugeteilt
+        /// </summary>
+        /// <param name="order"></param>
         public void AddOrdersToGuests(Order order)
         {
             { 
@@ -87,7 +97,7 @@ namespace Restaurant.Core
             }
         }
             /// <summary>
-            /// Die Bestellungen werden Eingelesen und demjenigen Gast zugewiesen
+            /// Die Bestellungen werden Eingelesen, in _listOfOrders gespeichert und demjenigen Gast zugewiesen
             /// </summary>
             /// <param name="filename"></param>
             public void ReadAllOrders(string filename)
@@ -121,7 +131,7 @@ namespace Restaurant.Core
         }      
 
         /// <summary>
-        /// Lest die Artikel von der CSV datai ein und speichert sie
+        /// Lest die Artikel von der CSV datai ein und speichert sie in _listOfArticles
         /// </summary>
         /// <param name="filename"></param>
         public void ReadArticlesFromCsv(string filename)
@@ -182,11 +192,16 @@ namespace Restaurant.Core
             return null;
         }
 
+        /// <summary>
+        /// Der Ausgabetext wird per OrderType gefiltert und weitergegeben
+        /// </summary>
+        /// <param name="order"></param>
         public void PrintOut(Order order)
         {
             if (order.OrderType == OrderType.ToPay)
             {
                 OnOrderRecieved(this, $"{order.GuestName} bezahlt {GetGuest(order.GuestName).Payment:f2} Euro");
+                _listOfGuests.Remove(GetGuest(order.GuestName));
             }
             if (order.OrderType == OrderType.Order)
             {
@@ -198,6 +213,22 @@ namespace Restaurant.Core
             }
         }
 
+        /// <summary>
+        /// Fertige Artikel werden ausgegeben und aus den Bestellungen gelöscht
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="order"></param>
+        private void OnLogTask(object sender, Order order)
+        {
+            PrintOut(order);
+            _listOfOrders.Remove(order);
+        }
+
+        /// <summary>
+        /// Jede Minute wird geprüft og ein Ereignis eintreten soll und gegebenfalls ausgegeben
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="time"></param>
         public void OnOneMinuteIsOver(object sender, DateTime time)
         {
             foreach (Order order in _listOfOrders)
@@ -209,7 +240,11 @@ namespace Restaurant.Core
             }
  
         }
-
+        /// <summary>
+        /// Text wird an TextBox geschickt
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="massage"></param>
         private void OnOrderRecieved(object sender, string massage)
         {
             OrderRecived?.Invoke(this, massage);
