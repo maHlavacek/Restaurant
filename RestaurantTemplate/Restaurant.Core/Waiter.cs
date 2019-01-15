@@ -51,7 +51,7 @@ namespace Restaurant.Core
 
         private void OnLogTask(object sender, Order order)
         {
-            OnOrderRecieved(this, $"{order.Article.Item} für {order.GuestName} wird serviert");
+            PrintOut(order);
             _listOfOrders.Remove(order);
         }
         #endregion
@@ -83,7 +83,7 @@ namespace Restaurant.Core
                     Article newArticle = order.Article;
                     guest._orderedArticles.Add(newArticle);
                 }
-
+                Task task = new Task(order);
             }
         }
             /// <summary>
@@ -106,7 +106,7 @@ namespace Restaurant.Core
                     string articleName = rows[3];
                     Order order = new Order(delay, guestName, orderType, GetArticle(articleName));
                     Guest guest = new Guest(order);
-                    Task task = new Task(order);
+
                     _listOfOrders.Add(order);
                     AddOrdersToGuests(order);
                 }
@@ -115,7 +115,6 @@ namespace Restaurant.Core
                     Order order = new Order(delay, guestName, OrderType.ToPay);
                     Guest guest = new Guest(order);
                     _listOfOrders.Add(order);
-                    AddOrdersToGuests(order);
                 }
 
             }

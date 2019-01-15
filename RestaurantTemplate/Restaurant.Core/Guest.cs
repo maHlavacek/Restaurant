@@ -12,6 +12,7 @@ namespace Restaurant.Core
         public Guest(Order order)
         {
             _orderedArticles = new List<Article>();
+            _payment = 0;
             Name = order.GuestName;
             _orderedArticles.Add(order.Article);
         }
