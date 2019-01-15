@@ -186,7 +186,7 @@ namespace Restaurant.Core
         {
             if (order.OrderType == OrderType.ToPay)
             {
-                OnOrderRecieved(this, $"{order.GuestName} bezahlt {GetGuest(order.GuestName).Payment}");
+                OnOrderRecieved(this, $"{order.GuestName} bezahlt {GetGuest(order.GuestName).Payment:f2} Euro");
             }
             if (order.OrderType == OrderType.Order)
             {

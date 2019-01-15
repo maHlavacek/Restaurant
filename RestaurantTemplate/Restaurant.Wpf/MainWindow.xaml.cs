@@ -25,6 +25,8 @@ namespace Restaurant.Wpf
 
         private void Waiter_OrderRecived(object sender, string massage)
         {
+
+            Title = $"RESTAURANTSIMULATOR, UHRZEIT: " + FastClock.Instance.Time.ToShortTimeString();
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(FastClock.Instance.Time.ToShortTimeString() + "\t");
             stringBuilder.Append(massage + "\n");

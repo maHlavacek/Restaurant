@@ -18,7 +18,7 @@ namespace Restaurant.Core
         #region Constructor
         public Task(Order order)
         {
-            _startToBuild = FastClock.Instance.Time;
+            _startToBuild = FastClock.Instance.Time.AddMinutes(order.Delay);
             FastClock.Instance.OneMinuteIsOver += Instance_OneMinuteIsOver;
             _order = order;
         }
