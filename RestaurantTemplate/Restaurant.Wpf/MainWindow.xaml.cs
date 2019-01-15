@@ -17,6 +17,7 @@ namespace Restaurant.Wpf
         private void MetroWindow_Initialized(object sender, EventArgs e)
         {
             FastClock.Instance.Time = DateTime.Parse("12:00:00");
+            FastClock.Instance.Factor = 360;
             FastClock.Instance.OneMinuteIsOver += OnOneMinuteIsOver;
             Waiter waiter = Waiter.Instance;
             waiter.OrderRecived += OnOrderRecived;
